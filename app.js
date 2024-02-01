@@ -37,23 +37,25 @@ const pool = mysql.createPool({
 // now get a Promise wrapped instance of that pool
 const promisePool = pool.promise();
 
-/////////////////// SSL CODE ADDED
-var fs = require('fs');
-var http = require('http');
-var https = require('https');
-var privateKey = fs.readFileSync('ssl/privkey.pem', 'utf8');
-var certificate = fs.readFileSync('ssl/fullchain.pem', 'utf8');
+// @dev commenting out SSL code because I was getting SSL Certification expiry error. Since updating certs is not part of the scope, ignoring for now.
 
-var credentials = { key: privateKey, cert: certificate };
+/////////////////// SSL CODE ADDED
+// var fs = require('fs');
+var http = require('http');
+// var https = require('https');
+// var privateKey = fs.readFileSync('ssl/privkey.pem', 'utf8');
+// var certificate = fs.readFileSync('ssl/fullchain.pem', 'utf8');
+
+// var credentials = { key: privateKey, cert: certificate };
 
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
+// var httpsServer = https.createServer(credentials, app);
 
 //////////////////////////////////////
 
 var http = require('http').Server(app);
 
-var io = require('socket.io')(httpsServer);
+var io = require('socket.io')(httpServer);
 
 // Load config
 const stage = process.env.NODE_ENV || 'production';
@@ -193,7 +195,7 @@ io.on('connection', (socket) => {
 
 if (module === require.main) {
   // var server = app.listen(process.env.PORT || 8088, function () {
-  var server = httpsServer.listen(process.env.PORT || 8088, function () {
+  var server = httpServer.listen(process.env.PORT || 8088, function () {
     var port = server.address().port;
     console.log('App listening on port %s', port);
   });

@@ -88,6 +88,7 @@ const {
   ForgotPasswordSchema,
   ResetPasswordSchema,
   updatePasswordSchema,
+  getBalanceSchema,
 } = require('../middleware/validators/userValidator.middleware');
 const {
   buyTokenSchema,
@@ -335,6 +336,9 @@ router.post(
   ensureWebToken,
   userController.ExchangeTransferICO.bind()
 ); // done
+
+////////// Balance Tokens ////////////
+router.post('/getBalance', getBalanceSchema, userController.getBalance.bind());
 
 // Buy Routing
 router.post(
